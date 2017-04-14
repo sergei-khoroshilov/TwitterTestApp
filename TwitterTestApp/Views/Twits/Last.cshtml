@@ -1,0 +1,56 @@
+﻿@model IEnumerable<TwitterTestApp.Models.Twit>
+
+@{
+    ViewBag.Title = "Last twits " + ViewBag.Hashtag;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Последние твиты по хештегу @ViewBag.Hashtag</h2>
+
+<p>
+    @Html.ActionLink("Обновить", "Last")
+</p>
+
+<div>
+    @foreach (var twit in Model)
+    {
+        <div class="well">
+            <blockquote class="blockquote">
+                <p class="mb-0">
+                    @Html.DisplayFor(_ => twit.Text)
+
+                    @if (twit.Images.Count > 0)
+                    {
+                        <div>
+                            @foreach (var image in twit.Images)
+                            {
+                                <img src="@image.Url" height="@image.Height" width="@image.Width" />
+                            }
+                        </div>
+                    }
+                </p>
+                <footer class="blockquote-footer">
+                    @Html.DisplayFor(_ => twit.Author.Name)
+                    <div class="twitTime">@Html.DisplayFor(_ => twit.CreateAt)</div>
+
+                    @foreach (var tag in twit.Tags)
+                    {
+                        @Html.DisplayFor(_ => tag)<text> </text>
+                    }
+                </footer>
+            </blockquote>
+        </div>
+    }
+
+    @section Scripts
+    {
+        <!-- Converting twit time to client's local time -->
+        <script type="text/javascript">
+            $(".twitTime").each(function () {
+                var utc = $(this).html();
+                var date = new Date(utc);
+                $(this).html(date.toLocaleString());
+            });
+        </script>
+    }
+</div>
